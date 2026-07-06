@@ -45,12 +45,12 @@ ErrorType Compiler::validate(int argc, char* argv[]) {
   constexpr int FILE_LOCATION = 1;
   std::string file_path = argv[FILE_LOCATION];
 
-  constexpr int MIN_FILE_NAME_LENGTH = 5;
+  constexpr int MIN_FILE_NAME_LENGTH = 4;
   if (!Validation::has_required_length(file_path, MIN_FILE_NAME_LENGTH)) {
     return ErrorType::INVALID_FILE_PATH;
   }
 
-  const std::string REQUIRED_FILE_TYPE = ".mgy";
+  const std::string REQUIRED_FILE_TYPE = ".ae";
   if (!Validation::is_valid_file_type(file_path, REQUIRED_FILE_TYPE)) {
     return ErrorType::INVALID_FILE;
   }

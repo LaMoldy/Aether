@@ -4,7 +4,7 @@
 
 
 void Error::print_usage() {
-  std::cout << "Usage: molgyc <file>.mgy" << std::endl;
+  std::cout << "Usage: aether <file>.ae" << std::endl;
 }
 
 void Error::print_error(ErrorType type) {

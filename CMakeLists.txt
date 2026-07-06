@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.20)
 
-project(molgylang)
+project(aether)
 
 set(CMAKE_CXX_STANDARD 26)
 
@@ -20,11 +20,11 @@ target_include_directories(core PUBLIC include)
 # --------------------
 # Main executable
 # --------------------
-add_executable(molgyc
+add_executable(aether
     src/main.cpp
 )
 
-target_link_libraries(molgyc PRIVATE core)
+target_link_libraries(aether PRIVATE core)
 
 # --------------------
 # Testing
