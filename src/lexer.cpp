@@ -28,6 +28,10 @@ std::string Lexer::get_identifier()
     return result;
 }
 
+bool Lexer::is_keyword(std::string value) { return keywords.contains(value); }
+
+TokenType Lexer::get_keyword_type(std::string value) { return keywords[value]; }
+
 std::string Lexer::get_number()
 {
     std::string result = "";
@@ -62,7 +66,16 @@ Token Lexer::next_token()
         (character >= 'A' && character <= 'Z'))
     {
         value = get_identifier();
-        type = TokenType::IDENTIFIER;
+
+        if (is_keyword(value))
+        {
+            type = get_keyword_type(value);
+        }
+        else
+        {
+            type = TokenType::IDENTIFIER;
+        }
+
         cursor--;
     }
     else if (character >= '0' && character <= '9')
