@@ -2,8 +2,7 @@
 
 #include <sstream>
 
-#include "../include/errors.h"
-
+#include "../include/errors.hpp"
 
 class ErrorTestSuite : public ::testing::Test {
  protected:

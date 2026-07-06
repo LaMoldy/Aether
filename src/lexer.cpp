@@ -1,7 +1,7 @@
-#include <lexer.h>
-#include <token.h>
-
 #include <cctype>
+#include <lexer.hpp>
+#include <token.hpp>
+
 
 Lexer::Lexer(std::string input) {
   cursor = 0;

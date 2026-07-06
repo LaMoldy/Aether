@@ -1,7 +1,5 @@
-#include <errors.h>
-
+#include <errors.hpp>
 #include <iostream>
-
 
 void Error::print_usage() {
   std::cout << "Usage: aether <file>.ae" << std::endl;

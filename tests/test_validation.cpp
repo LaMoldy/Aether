@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../include/validation.h"
-
+#include "../include/validation.hpp"
 
 TEST(ValidationTestSuite, HasValidAmount_VALID) {
   bool result = Validation::has_valid_amount(5, 5);

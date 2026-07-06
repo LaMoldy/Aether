@@ -1,8 +1,8 @@
 #pragma once
 
-#include <errors.h>
-
+#include <errors.hpp>
 #include <string>
+
 
 class Compiler {
  public:

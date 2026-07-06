@@ -1,8 +1,10 @@
-﻿cmake_minimum_required(VERSION 3.20)
+﻿cmake_minimum_required(VERSION 4.3.1)
 
 project(aether)
 
 set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # --------------------
 # Core library (NO main.cpp)
@@ -15,7 +17,10 @@ add_library(core STATIC
     src/token.cpp
 )
 
-target_include_directories(core PUBLIC include)
+target_sources(core
+    PUBLIC FILE_SET HEADERS
+        BASE_DIRS include
+)
 
 # --------------------
 # Main executable
@@ -54,7 +59,5 @@ target_link_libraries(run_tests
     gtest_main
 )
 
-add_test(NAME ErrorTestSuite COMMAND run_tests)
-add_test(NAME ValidationTestSuite COMMAND run_tests)
-add_test(NAME TokenTestSuite COMMAND run_tests)
-add_test(NAME LexerTestSuite COMMAND run_tests)
+include(GoogleTest)
+gtest_discover_tests(run_tests)

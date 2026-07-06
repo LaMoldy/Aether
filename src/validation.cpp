@@ -1,6 +1,6 @@
-#include <validation.h>
-
 #include <string>
+#include <validation.hpp>
+
 
 bool Validation::has_valid_amount(int amount, int required) {
   return amount == required;

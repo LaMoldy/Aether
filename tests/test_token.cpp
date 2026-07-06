@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../include/token.h"
-
+#include "../include/token.hpp"
 
 TEST(TokenTestSuite, TokenToStrIdentifier) {
   Token tok = Token(TokenType::IDENTIFIER, "Hello");

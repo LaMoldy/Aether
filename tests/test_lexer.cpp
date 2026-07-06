@@ -2,9 +2,8 @@
 
 #include <vector>
 
-#include "../include/lexer.h"
-#include "../include/token.h"
-
+#include "../include/lexer.hpp"
+#include "../include/token.hpp"
 
 TEST(LexerTestSuite, TestTokenize) {
   using namespace std::string_literals;

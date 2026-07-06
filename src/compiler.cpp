@@ -1,14 +1,12 @@
-#include <compiler.h>
-#include <errors.h>
-#include <lexer.h>
-#include <token.h>
-#include <validation.h>
-
+#include <compiler.hpp>
 #include <cstdlib>
+#include <errors.hpp>
 #include <fstream>
 #include <iostream>
+#include <lexer.hpp>
 #include <sstream>
-
+#include <token.hpp>
+#include <validation.hpp>
 
 void Compiler::init(int argc, char* argv[]) {
   ErrorType error = validate(argc, argv);

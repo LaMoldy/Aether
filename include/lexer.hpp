@@ -1,9 +1,9 @@
 #pragma once
 
-#include <token.h>
-
 #include <string>
+#include <token.hpp>
 #include <vector>
+
 
 class Lexer {
  public:

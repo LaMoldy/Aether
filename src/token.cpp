@@ -1,8 +1,8 @@
-#include <token.h>
-
 #include <format>
 #include <map>
 #include <optional>
+#include <token.hpp>
+
 
 Token::Token(TokenType type, std::optional<std::string> value = std::nullopt) {
   this->type = type;
