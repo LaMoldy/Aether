@@ -2,9 +2,4 @@
 BasedOnStyle: Google
 Language: Cpp
 Standard: Latest
-BreakBeforeBraces: Allman
-IndentWidth: 4
-TabWidth: 4
-UseTab: Never
-AccessModifierOffset: -4
 ...

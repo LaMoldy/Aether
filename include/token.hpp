@@ -4,37 +4,36 @@
 #include <string>
 #include <unordered_map>
 
-enum class TokenType : int
-{
-    // Special Tokens
-    ILLEGAL,
-    END_OF_FILE,
+enum class TokenType : int {
+  // Special Tokens
+  ILLEGAL,
+  END_OF_FILE,
 
-    // General
-    IDENTIFIER,
-    NUMBER,
+  // General
+  IDENTIFIER,
+  NUMBER,
 
-    // Keywords
-    FUNCTION,
-    IF,
-    RETURN,
-    PRINT,
-    LET,
-    INT,
+  // Keywords
+  FUNCTION,
+  IF,
+  RETURN,
+  PRINT,
+  LET,
+  INT,
 
-    // Punctuation
-    ASSIGN,
-    PLUS,
-    MINUS,
-    COMMA,
-    SEMICOLON,
-    COLON,
-    LPAREN,
-    RPAREN,
-    LCURLY,
-    RCURLY,
-    QUOTES,
-    DQUOTES
+  // Punctuation
+  ASSIGN,
+  PLUS,
+  MINUS,
+  COMMA,
+  SEMICOLON,
+  COLON,
+  LPAREN,
+  RPAREN,
+  LCURLY,
+  RCURLY,
+  QUOTES,
+  DQUOTES
 };
 
 inline std::unordered_map<std::string, TokenType> keywords = {
@@ -42,15 +41,34 @@ inline std::unordered_map<std::string, TokenType> keywords = {
     {"let", TokenType::LET},           {"println", TokenType::PRINT},
     {"return", TokenType::RETURN},     {"int", TokenType::INT}};
 
-class Token
-{
-public:
-    std::optional<std::string> value;
-    TokenType type;
+inline std::unordered_map<char, TokenType> token_types = {
+    {'{', TokenType::LCURLY},      {'}', TokenType::RCURLY},
+    {'(', TokenType::LPAREN},      {')', TokenType::RPAREN},
+    {'=', TokenType::ASSIGN},      {'+', TokenType::PLUS},
+    {'-', TokenType::MINUS},       {';', TokenType::SEMICOLON},
+    {':', TokenType::COLON},       {',', TokenType::COMMA},
+    {'"', TokenType::DQUOTES},     {'\'', TokenType::QUOTES},
+    {'\0', TokenType::END_OF_FILE}};
 
-    Token(TokenType type, std::optional<std::string> value);
-    std::string to_str();
 
-private:
-    std::string token_type_to_str();
+class SourceLocation {
+ public:
+  std::string line;
+  std::string col;
+
+  SourceLocation(std::string line, std::string col);
+};
+
+class Token {
+ public:
+  std::optional<std::string> value;
+  TokenType type;
+  SourceLocation location;
+
+  Token(TokenType type, SourceLocation location, std::optional<std::string> value);
+  std::string to_str();
+
+ private:
+  std::string token_type_to_str() const;
+  std::string location_to_str() const;
 };
