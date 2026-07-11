@@ -53,11 +53,3 @@ struct ReturnStatement : Statement {
 
   void generate(std::ostream& out, CodegenContext& ctx) const override;
 };
-
-// struct LetStatement : Statement {
-//   std::unique_ptr<Expression> expression;
-//   LetStatement(std::unique_ptr<Expression> expression)
-//       : expression(std::move(expression)) {}
-
-//   void generate(std::ostream& out, CodegenContext& ctx) const override;
-// };

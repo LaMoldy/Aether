@@ -1,9 +1,5 @@
-#pragma once
-
 #include <ast.hpp>
-#include <memory>
 #include <token.hpp>
-#include <vector>
 
 class Parser {
  public:
@@ -11,14 +7,12 @@ class Parser {
   std::unique_ptr<Program> parse();
 
  private:
-  std::vector<Token> tokens;
-  size_t position;
+  const std::vector<Token>& tokens;
+  int position;
 
   const Token& peek();
-  const Token& consume(TokenType expected);
-  const Token& advance();
-
+  void consume(TokenType expected);
+  void advance();
   std::unique_ptr<Expression> parseExpression();
-  std::unique_ptr<ReturnStatement> parseReturnStatement();
-  // std::unique_ptr<LetStatement> parseLetStatement();
+  std::unique_ptr<ReturnStatement> parseReturn();
 };
