@@ -52,6 +52,16 @@ std::unique_ptr<Expression> Parser::parseExpression() {
   }
 }
 
+std::unique_ptr<PrintStatement> Parser::parsePrintStatement() {
+  consume(TokenType::PRINT);
+  consume(TokenType::LPAREN);
+  consume(TokenType::DQUOTES);
+  auto expr = parseExpression();
+  consume(TokenType::DQUOTES);
+  consume(TokenType::RPAREN);
+  return std::make_unique<PrintStatement>(std::move(expr));
+}
+
 std::unique_ptr<ReturnStatement> Parser::parseReturn() {
   consume(TokenType::RETURN);
   auto expr = parseExpression();
@@ -71,6 +81,10 @@ std::unique_ptr<Program> Parser::parse() {
       }
       case TokenType::SEMICOLON:
         break;
+      case TokenType::PRINT: {
+        stmt = parsePrintStatement();
+        break;
+      }
       default:
         const Token& tok = peek();
         std::string message = std::format(

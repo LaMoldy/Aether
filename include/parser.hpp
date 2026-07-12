@@ -15,4 +15,6 @@ class Parser {
   void advance();
   std::unique_ptr<Expression> parseExpression();
   std::unique_ptr<ReturnStatement> parseReturn();
+  std::unique_ptr<LetStatement> parseLetStatement();
+  std::unique_ptr<PrintStatement> parsePrintStatement();
 };
