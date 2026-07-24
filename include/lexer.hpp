@@ -1,14 +1,16 @@
 #pragma once
 
-#include <string>
 #include <token.hpp>
 #include <vector>
 
+inline std::unordered_map<std::string, TokenType> keywords = {
+    {"ret", TokenType::RETURN}};
+
 class Lexer {
  public:
+  std::string input;
   int cursor;
   char character;
-  std::string input;
   int line;
   int col;
 
@@ -16,11 +18,11 @@ class Lexer {
   std::vector<Token> tokenize();
 
  private:
-  void remove_whitespace();
+  bool is_keyword(std::string value);
+  TokenType get_keyword_type(std::string value);
   void read_char();
+  void remove_whitespace();
   std::string get_identifier();
-  bool is_keyword(std::string);
-  TokenType get_keyword_type(std::string);
   std::string get_number();
-  Token next_token();
+  Token get_next_token();
 };

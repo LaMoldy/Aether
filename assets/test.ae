@@ -1,2 +1,1 @@
-print("Hello World");
-return 300;
+ret 300

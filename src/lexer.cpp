@@ -3,15 +3,14 @@
 #include <token.hpp>
 
 Lexer::Lexer(std::string input) {
+  this->input = input;
   cursor = 1;
   character = input.empty() ? '\0' : input[0];
-  this->input = input;
   line = 1;
   col = 1;
 }
 
-bool Lexer::is_keyword(std::string value) { return keywords.contains(value); }
-
+bool Lexer::is_keyword(std::string input) { return keywords.contains(input); }
 TokenType Lexer::get_keyword_type(std::string value) { return keywords[value]; }
 
 void Lexer::remove_whitespace() {
@@ -52,15 +51,15 @@ void Lexer::read_char() {
   cursor++;
 }
 
-Token Lexer::next_token() {
+Token Lexer::get_next_token() {
   remove_whitespace();
-  std::string value = "";
 
+  std::string value = "";
   TokenType type;
+
   if ((character >= 'a' && character <= 'z') ||
       (character >= 'A' && character <= 'Z')) {
     value = get_identifier();
-
     if (is_keyword(value)) {
       type = get_keyword_type(value);
     } else {
@@ -71,32 +70,30 @@ Token Lexer::next_token() {
   } else if (character >= '0' && character <= '9') {
     value = get_number();
     type = TokenType::NUMBER;
-    col = cursor - value.length() + 1;
+    col = cursor - value.length();
     cursor--;
   } else {
     if (!token_types.contains(character)) {
-      type = TokenType::ILLEGAL;
+      type = TokenType::END_OF_FILE;
     } else {
       type = token_types[character];
     }
-
     col = cursor + 1;
   }
 
   if (value == "") {
     value += character;
   }
-
   read_char();
-  SourceLocation sourceLocation(std::to_string(line), std::to_string(col));
-  return Token(type, sourceLocation, value);
+  return Token(value, type, line, col);
 }
 
 std::vector<Token> Lexer::tokenize() {
   std::vector<Token> tokens = std::vector<Token>();
   while (cursor <= input.size()) {
-    Token token = next_token();
-    tokens.push_back(token);
+    Token tok = get_next_token();
+    tokens.push_back(tok);
   }
+
   return tokens;
 }

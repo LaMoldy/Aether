@@ -10,13 +10,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Core library (NO main.cpp)
 # --------------------
 add_library(core STATIC
-    src/validation.cpp
-    src/errors.cpp
     src/compiler.cpp
     src/lexer.cpp
     src/token.cpp
     src/parser.cpp
-    src/ast.cpp
+    src/codegen.cpp
 )
 
 target_sources(core

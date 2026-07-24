@@ -1,89 +1,86 @@
-#include <ast.hpp>
 #include <compiler.hpp>
-#include <cstdlib>
-#include <errors.hpp>
 #include <fstream>
 #include <iostream>
 #include <lexer.hpp>
-#include <parser.hpp>
 #include <sstream>
-#include <token.hpp>
-#include <validation.hpp>
 
-void Compiler::init(int argc, char* argv[]) {
-  ErrorType error = validate(argc, argv);
-  if (error != ErrorType::NONE) {
-    Error::print_error(error);
-    std::exit(EXIT_FAILURE);
+#include "codegen.hpp"
+#include "parser.hpp"
+
+void Compiler::print_usage() {
+  std::cout << "Usage: aether <source file>.ae" << std::endl;
+}
+
+bool Compiler::is_valid_file_name() {
+  const int REQUIRED_LENGTH = 4;
+  return source_file.length() >= REQUIRED_LENGTH;
+}
+
+bool Compiler::is_valid_file_type() {
+  const std::string REQUIRED_EXTENSION = ".ae";
+  return source_file.ends_with(REQUIRED_EXTENSION);
+}
+
+std::string Compiler::get_file_data() {
+  std::ifstream file(source_file);
+
+  if (!file.is_open()) {
+    std::cout << "<compiler error>: Failed to read the source file provided, "
+                 "please try again"
+              << std::endl;
+    exit(EXIT_FAILURE);
   }
 
-  std::string file_path = Compiler::get_file_path(argv);
-  std::string file_content;
+  std::stringstream buffer;
+  buffer << file.rdbuf();
 
-  error = Compiler::read_file(file_path, &file_content);
-  if (error != ErrorType::NONE) {
-    Error::print_error(error);
-    std::exit(EXIT_FAILURE);
+  return buffer.str();
+}
+
+void Compiler::validate() {
+  if (!is_valid_file_name() || !is_valid_file_type()) {
+    std::cout << "<compiler error>: Invalid file provided to the compiler"
+              << std::endl;
+    print_usage();
+    exit(EXIT_FAILURE);
   }
+}
 
-  Lexer lexer = Lexer(file_content);
-  std::vector<Token> tokens = lexer.tokenize();
+void Compiler::tokenize() {
+  std::string data = get_file_data();
+  std::cout << "Data: " << std::endl << data << std::endl;
+  Lexer lexer(data);
+  tokens = lexer.tokenize();
 
-  for (Token token : tokens) {
-    std::cout << token.to_str() << std::endl;
+  for (Token tok : tokens) {
+    std::cout << tok.to_string() << std::endl;
   }
+}
 
+void Compiler::parse() {
   Parser parser = Parser(tokens);
-  std::unique_ptr<Program> statements = parser.parse();
+  program = parser.parse();
+}
 
-  Program program;
+void Compiler::generate() {
+  Codegen codegen;
+  std::string code = codegen.generate(*program);
   std::ofstream file("build/out.asm");
-  statements->generate(file);
+  file << code;
   file.close();
+}
 
+void Compiler::create_exe() {
   system("nasm -f win64 build/out.asm -o build/out.obj");
   system("gcc build/out.obj -o build/main.exe -mconsole");
   remove("./build/out.asm");
   remove("./build/out.obj");
 }
 
-ErrorType Compiler::validate(int argc, char* argv[]) {
-  constexpr int REQUIRED_ARGS = 2;
-  if (!Validation::has_valid_amount(argc, REQUIRED_ARGS)) {
-    return ErrorType::INVALID_ARGC;
-  }
-
-  constexpr int FILE_LOCATION = 1;
-  std::string file_path = argv[FILE_LOCATION];
-
-  constexpr int MIN_FILE_NAME_LENGTH = 4;
-  if (!Validation::has_required_length(file_path, MIN_FILE_NAME_LENGTH)) {
-    return ErrorType::INVALID_FILE_PATH;
-  }
-
-  const std::string REQUIRED_FILE_TYPE = ".ae";
-  if (!Validation::is_valid_file_type(file_path, REQUIRED_FILE_TYPE)) {
-    return ErrorType::INVALID_FILE;
-  }
-
-  return ErrorType::NONE;
-}
-
-ErrorType Compiler::read_file(std::string file_path, std::string* output) {
-  std::ifstream file(file_path);
-
-  if (!file.is_open()) {
-    return ErrorType::UNABLE_TO_READ;
-  }
-
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-
-  *output = buffer.str();
-  return ErrorType::NONE;
-}
-
-std::string Compiler::get_file_path(char* argv[]) {
-  const int FILE_POSITION = 1;
-  return argv[FILE_POSITION];
+void Compiler::run() {
+  validate();
+  tokenize();
+  parse();
+  generate();
+  create_exe();
 }
