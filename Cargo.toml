@@ -8,3 +8,4 @@ repository = "https://github.com/lamoldy/Aether"
 readme = "README.md"
 
 [dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
