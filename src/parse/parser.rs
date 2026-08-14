@@ -19,17 +19,10 @@ impl Parser {
         let mut statements = Vec::new();
 
         while self.current_token().token_type != TokenType::Eof("".to_string()) {
-            let statement: Statement;
-
-            match self.current_token().token_type {
-                TokenType::Return(_) => {
-                    statement = self.parse_statement().unwrap();
-                }
-                _ => {
-                    return Err(ParseError::UnexpectedError(self.current_token().clone()));
-                }
+            let statement = self.parse_statement();
+            if let Some(statement) = statement {
+                statements.push(statement);
             }
-            statements.push(statement);
         }
 
         Ok(statements)
@@ -58,7 +51,8 @@ impl Parser {
 
     fn parse_statement(&mut self) -> Option<Statement> {
         match self.current_token().token_type {
-            TokenType::Return(_) => Some(self.parse_return_statement()),
+            TokenType::Return(_) => self.parse_return_statement().ok(),
+            TokenType::Print(_) => self.parse_print_statement().ok(),
             _ => {
                 return None;
             }
@@ -94,13 +88,21 @@ impl Parser {
         Expression::String(token.token_type.as_str().to_string().clone())
     }
 
-    fn parse_return_statement(&mut self) -> Statement {
-        match self.consume_token(TokenType::Return("ret".to_string())) {
-            Ok(_) => {
-                let expression = self.parse_expression();
-                Statement::Return(expression.unwrap_or(Expression::Integer(0)))
-            }
-            Err(_) => Statement::Return(Expression::Integer(0)),
-        }
+    fn parse_return_statement(&mut self) -> Result<Statement, ParseError> {
+        self.consume_token(TokenType::Return("ret".to_string()))?;
+        let expression = self
+            .parse_expression()
+            .ok_or_else(|| ParseError::UnexpectedError(self.current_token().clone()))?;
+        Ok(Statement::Return(expression))
+    }
+
+    fn parse_print_statement(&mut self) -> Result<Statement, ParseError> {
+        self.consume_token(TokenType::Print("print".to_string()))?;
+        self.advance();
+        let expression = self
+            .parse_expression()
+            .ok_or_else(|| ParseError::UnexpectedError(self.current_token().clone()))?;
+        self.advance();
+        Ok(Statement::Print(expression))
     }
 }

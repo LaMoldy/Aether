@@ -8,6 +8,7 @@ pub enum Expression {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Statement {
     Return(Expression),
+    Print(Expression),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

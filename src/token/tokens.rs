@@ -17,19 +17,23 @@ impl Token {
     }
 
     pub fn is_keyword(ident: &str) -> bool {
-        matches!(ident, "ret")
+        match ident {
+            "ret" | "print" => true,
+            _ => false,
+        }
     }
 
     pub fn keyword_to_token_type(ident: &str) -> TokenType {
         match ident {
             "ret" => TokenType::Return(ident.to_string()),
+            "print" => TokenType::Print(ident.to_string()),
             _ => TokenType::Identifier(ident.to_string()),
         }
     }
 
     pub fn to_string(&self) -> String {
         format!(
-            "\t{{\n\t\tType: {}\n\t\tLine: {}\n\t\tColumn: {}\n\t}},",
+            "Type: {} Line: {} Column: {},",
             self.token_type, self.line, self.column
         )
     }
@@ -39,6 +43,7 @@ impl Token {
 pub enum TokenType {
     Unknown(String),
     Return(String),
+    Print(String),
     Identifier(String),
     Operator(String),
     Symbol(String),
@@ -52,6 +57,7 @@ impl TokenType {
         match self {
             TokenType::Unknown(val) => val.as_str(),
             TokenType::Return(val) => val.as_str(),
+            TokenType::Print(val) => val.as_str(),
             TokenType::Identifier(val) => val.as_str(),
             TokenType::Operator(val) => val.as_str(),
             TokenType::Symbol(val) => val.as_str(),
@@ -74,6 +80,7 @@ impl Display for TokenType {
         match self {
             TokenType::Unknown(val) => write!(f, "Unknown({})", val),
             TokenType::Return(val) => write!(f, "Return({})", val),
+            TokenType::Print(val) => write!(f, "Print({})", val),
             TokenType::Identifier(val) => write!(f, "{}", val),
             TokenType::Operator(val) => write!(f, "{}", val),
             TokenType::Symbol(val) => write!(f, "{}", val),

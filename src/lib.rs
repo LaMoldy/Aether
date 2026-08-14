@@ -18,13 +18,11 @@ pub fn run() -> std::io::Result<i32> {
             let mut lexer = lex::Lexer::new(&source);
             let tokens = lexer.tokenize();
 
-            println!("Tokens: [");
-            for token in tokens.clone() {
-                println!("{:?}", token.to_string());
-            }
-            println!("Tokens: ]\n\n");
+            // for token in tokens.clone() {
+            //     println!("{:?}", token.to_string());
+            // }
 
-            let mut parser = parse::Parser::new(tokens.clone());
+            let mut parser = parse::Parser::new(tokens);
             match parser.parse() {
                 Ok(statements) => {
                     let program = ast::Program { statements };
@@ -35,6 +33,7 @@ pub fn run() -> std::io::Result<i32> {
                         translater::ControlFlow::Return(translater::Value::Integer(value)) => {
                             Ok(value as i32)
                         }
+                        translater::ControlFlow::Return(translater::Value::String(_)) => Ok(0),
                     }
                 }
                 Err(err) => Err(std::io::Error::new(std::io::ErrorKind::Other, err)),
