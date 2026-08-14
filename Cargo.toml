@@ -2,5 +2,9 @@
 name = "aether"
 version = "0.1.0"
 edition = "2024"
+description = "A small, modern programming language built from the ground up as a journey into language and compiler development."
+license = "MIT"
+repository = "https://github.com/lamoldy/Aether"
+readme = "README.md"
 
 [dependencies]
