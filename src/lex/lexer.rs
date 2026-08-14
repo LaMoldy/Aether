@@ -1,4 +1,4 @@
-use super::{Token, TokenType};
+use crate::token::{Token, TokenType};
 
 pub struct Lexer<'source> {
     source: &'source str,
@@ -34,8 +34,7 @@ impl<'source> Lexer<'source> {
 
         match self.char {
             0 => Token {
-                token_type: TokenType::Eof,
-                value: String::new(),
+                token_type: TokenType::Eof(String::new()),
                 line: self.line,
                 column: self.col,
             },
@@ -98,15 +97,14 @@ impl<'source> Lexer<'source> {
             self.read_char();
         }
 
-        let token_type = if TokenType::is_keyword(&value) {
-            TokenType::keyword_to_token_type(&value)
+        let token_type = if Token::is_keyword(&value) {
+            Token::keyword_to_token_type(&value)
         } else {
-            TokenType::Identifier
+            TokenType::Identifier(value)
         };
 
         Token {
             token_type,
-            value: value,
             line,
             column,
         }
@@ -125,7 +123,6 @@ impl<'source> Lexer<'source> {
 
         Token {
             token_type: TokenType::Integer(value.parse().unwrap()),
-            value: value,
             line,
             column,
         }
@@ -157,7 +154,6 @@ impl<'source> Lexer<'source> {
 
         Token {
             token_type: TokenType::Operator(value.to_owned()),
-            value: value,
             line,
             column,
         }
@@ -181,7 +177,6 @@ impl<'source> Lexer<'source> {
 
         Token {
             token_type: TokenType::String(value.to_owned()),
-            value: value,
             line,
             column,
         }
@@ -207,7 +202,6 @@ impl<'source> Lexer<'source> {
 
         Token {
             token_type: TokenType::Symbol(value.to_string()),
-            value: value.to_string(),
             line,
             column,
         }
@@ -221,7 +215,6 @@ impl<'source> Lexer<'source> {
 
         Token {
             token_type: TokenType::Unknown(value.to_owned()),
-            value: value,
             line,
             column,
         }

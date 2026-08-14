@@ -1,11 +1,12 @@
-use aether::lexer::{Lexer, TokenType};
+use aether::lex::Lexer;
+use aether::token::TokenType;
 
 #[test]
 fn tokenizes_return() {
     let mut lexer = Lexer::new("ret 42");
     let tokens = lexer.tokenize();
 
-    assert_eq!(tokens[0].token_type, TokenType::Return);
+    assert_eq!(tokens[0].token_type, TokenType::Return("ret".to_string()));
     assert_eq!(tokens[1].token_type, TokenType::Integer(42));
 }
 
@@ -22,7 +23,10 @@ fn tokenizes_identifier() {
     let mut lexer = Lexer::new("answer");
     let tokens = lexer.tokenize();
 
-    assert_eq!(tokens[0].token_type, TokenType::Identifier);
+    assert_eq!(
+        tokens[0].token_type,
+        TokenType::Identifier("answer".to_string())
+    );
 }
 
 #[test]
