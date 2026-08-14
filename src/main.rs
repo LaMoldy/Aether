@@ -1,8 +1,6 @@
 mod cli;
 
-use clap::Parser;
-use cli::Args;
-
-fn main() {
-    let _ = Args::parse();
+fn main() -> std::io::Result<()> {
+    aether::run();
+    Ok(())
 }
